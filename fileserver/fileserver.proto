@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package fileserver;
+// import "google/api/annotations.proto";
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {
+  //  option (google.api.http) = {
+  //    post: "/v1/example/hello"
+  //    body: "*"
+  //    additional_bindings {
+  //      get: "/v1/example/hello/{name}"
+  //    }
+  //    additional_bindings {
+  //      delete: "/v1/example/hello/{name}"
+  //    }
+  //    additional_bindings {
+  //      put: "/v1/example/hello/{name}"
+  //    }
+  //  };
+  }
+  rpc List (Empty) returns (FileInfoResponse) {}
+  rpc Upload (stream Chunk) returns (Status) {}
+  rpc Download (FileName) returns (stream Chunk) {}
+}
+
+message Empty { 
+} 
+
+message Chunk {
+  bytes Content = 1;
+}
+
+message FileName {
+  string name = 1;
+}
+
+message FileInfo {
+  string name = 1;
+  int64 size = 2;
+  bool isDir = 3;
+}
+
+message FileInfoResponse {
+  repeated FileInfo files = 1;
+}
+
+enum StatusCode {
+  Unknown = 0;
+  Ok = 1;
+  Failed = 2;
+}
+
+message Status {
+  StatusCode Code = 1;
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
